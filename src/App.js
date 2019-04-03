@@ -10,81 +10,101 @@ class Snake extends Component {
       y: 0,
       vx: 10,
       vy: -10,
-      dir: '',
+      direction: '',
     }
+    this.handleKeyDown = this.handleKeyDown.bind(this);
  }
   componentDidMount() {
-    this.interval = setInterval(() => this.mv(this.state), 1000);
-    
     const tick = 1000;
-    // this.interval = setInterval(() => this.mv(this.state, Math.random() + 1), tick);
     this.interval = setInterval(() => this.tick(this.state), tick);
+    window.addEventListener("keydown", this.handleKeyDown, true);
   }
 
-  mv = (state, randomNumber) => {
-    // this.setState({
-    //   x: state.x + (state.vx * randomNumber),
-    //   y: state.y + (state.vy * randomNumber),
-    // })
-    // if (this.state.y < 0 || this.state.y > 320) {
-    //   this.setState({
-    //     vx: state.vx * 1,
-    //     vy: state.vy * -1,
-    //   })
-    // }
+  handleKeyDown = (e) => {
+    switch(e.keyCode) {
+      case 37:
+        this.setState({ direction: 'LEFT'})
+        break;
+      case 38:
+        this.setState({ direction: 'UP'})
+        break;
+      case 39:
+        this.setState({ direction: 'RIGHT'})
+        break;
+      case 40:
+        this.setState({ direction: 'DOWN'})
+        break;
+      default:
+        break;
+    }
+
+  }
+
+
+  move = (state) => {
+    const { direction } = state;
+    const unit = 16;
+    switch(direction) {
+      case 'DOWN':
+        this.down(state, unit);
+        break;
+      case 'LEFT':
+        this.left(state, unit);
+        break;
+      case 'UP':
+        this.up(state, unit);
+        break;
+      case 'RIGHT':
+        this.right(state, unit);
+        break;
+      default:
+        break
+    }
+
   }
 
   tick = (state) => {
+    const unit = 16;
     if (this.state.y === 0 && this.state.x >= 320) {
-      this.setState({ dir: 'DOWN' });
-      this.down(state);
+      this.setState({ direction: 'DOWN' });
+      this.down(state, unit);
     } 
     if (this.state.x === 320 && this.state.y >= 320) {
-      this.setState({ dir: 'LEFT' });
-      this.left(state);
+      this.setState({ direction: 'LEFT' });
+      this.left(state, unit);
     }
     if (this.state.x === 0 && this.state.y >= 320) {
-      this.setState({ dir: 'UP' });
-      this.up(state);
+      this.setState({ direction: 'UP' });
+      this.up(state, unit);
     } 
     if (this.state.x === 0 && this.state.y === 0) {
-      this.setState({ dir: 'RIGHT' });
-      this.right(state);
+      this.setState({ direction: 'RIGHT' });
+      this.right(state, unit);
     }
-
-
-    if (this.state.dir === 'DOWN')
-      this.down(state);
-    if (this.state.dir === 'LEFT')
-      this.left(state);
-    if (this.state.dir === 'UP')
-      this.up(state);
-    if (this.state.dir === 'RIGHT')
-      this.right(state);
-
+    this.move(state);
   }
 
-  right = (state) => {
+  right = (state, unit) => {
     this.setState({
-      x: state.x + 16, 
+      x: state.x + unit, 
     })
   }
 
-  left = (state) => {
+  left = (state, unit) => {
     this.setState({
-      x: state.x - 16, 
+      x: state.x - unit, 
     })
   }
 
-  down = (state) => {
+  down = (state, unit) => {
     this.setState({
-      y: state.y + 16,
+      y: state.y + unit,
     })
   }
 
-  up = (state) => {
+  up = (state, unit) => {
     this.setState({
-      y: state.y - 16,
+      y: state.y - unit,
     })
   }
 
