@@ -1,24 +1,35 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+// import './App.css';
 
 
-class Snake extends Component {
+class Screen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       x: 0,
       y: 0,
+      snake: [
+        {x: 48 ,y: 0},
+        {x: 32 ,y: 0},
+        {x: 16 ,y: 0},
+        {x: 0 ,y: 0},
+      ],
       vx: 10,
       vy: -10,
-      direction: '',
+      direction: 'RIGHT',
+      moving: true,
     }
     this.handleKeyDown = this.handleKeyDown.bind(this);
  }
+
+
+
   componentDidMount() {
-    const tick = 1000;
+    const tick = 500;
     this.interval = setInterval(() => this.tick(this.state), tick);
     window.addEventListener("keydown", this.handleKeyDown, true);
   }
+  
 
   handleKeyDown = (e) => {
     switch(e.keyCode) {
@@ -34,16 +45,37 @@ class Snake extends Component {
       case 40:
         this.setState({ direction: 'DOWN'})
         break;
+      case 80:
+        this.setState({ moving: !this.state.moving})
+        break;
       default:
         break;
     }
-
   }
 
 
-  move = (state) => {
+  collideWall = (snake, newHead, wallPos) => {
+    return (
+      newHead.x >= wallPos.x || 
+      newHead.y >= wallPos.y ||
+      newHead.x < 0 ||
+      newHead.y < 0 
+    )
+  }
+
+  collideSelf = (snake, newHead) => {
+    let collision = false;
+    snake.forEach(element => {
+      if (element.x === newHead.x && element.y === newHead.y) {
+        collision = true;
+        return;
+      }
+    });
+    return collision;
+  }
+
+  move = (state, unit) => {
     const { direction } = state;
-    const unit = 16;
     switch(direction) {
       case 'DOWN':
         this.down(state, unit);
@@ -65,67 +97,96 @@ class Snake extends Component {
 
   tick = (state) => {
     const unit = 16;
-    if (this.state.y === 0 && this.state.x >= 320) {
-      this.setState({ direction: 'DOWN' });
-      this.down(state, unit);
-    } 
-    if (this.state.x === 320 && this.state.y >= 320) {
-      this.setState({ direction: 'LEFT' });
-      this.left(state, unit);
-    }
-    if (this.state.x === 0 && this.state.y >= 320) {
-      this.setState({ direction: 'UP' });
-      this.up(state, unit);
-    } 
-    if (this.state.x === 0 && this.state.y === 0) {
-      this.setState({ direction: 'RIGHT' });
-      this.right(state, unit);
-    }
-    this.move(state);
+    // if (this.state.y === 0 && this.state.x >= 320) {
+    //   this.setState({ direction: 'DOWN' });
+    //   this.down(state, unit);
+    // } 
+    // if (this.state.x === 320 && this.state.y >= 320) {
+    //   this.setState({ direction: 'LEFT' });
+    //   this.left(state, unit);
+    // }
+    // if (this.state.x === 0 && this.state.y >= 320) {
+    //   this.setState({ direction: 'UP' });
+    //   this.up(state, unit);
+    // } 
+    // if (this.state.x === 0 && this.state.y === 0) {
+    //   this.setState({ direction: 'RIGHT' });
+    //   this.right(state, unit);
+    // }
+    state.moving && this.move(state, unit);
   }
 
   right = (state, unit) => {
-    this.setState({
-      x: state.x + unit, 
-    })
+    const { snake } = state;
+    const newHead = { x: snake[0].x + unit , y: snake[0].y } // move head
+    this.collideSelf(snake, newHead) || this.collideWall(snake, newHead, {x: 480, y: 480}) ?
+      this.setState({moving: false})
+      :
+      this.setState({
+        snake: [
+          newHead,
+          ...snake.slice(0, snake.length - 1), // move body 
+        ],
+        moving: true,
+      })
   }
 
   left = (state, unit) => {
-    this.setState({
-      x: state.x - unit, 
-    })
+    const { snake } = state;
+    const newHead = { x: snake[0].x - unit , y: snake[0].y } // move head
+    this.collideSelf(snake, newHead) || this.collideWall(snake, newHead, {x: 480, y: 480}) ?
+      this.setState({moving: false})
+      :
+      this.setState({
+        snake: [
+          newHead,
+          ...snake.slice(0, snake.length - 1), // move body 
+        ],
+        moving: true,
+      })
   }
 
   down = (state, unit) => {
-    this.setState({
-      y: state.y + unit,
-    })
+    const { snake } = state;
+    const newHead = { x: snake[0].x, y: snake[0].y + unit } // move head
+    this.collideSelf(snake, newHead) || this.collideWall(snake, newHead, {x: 480, y: 480}) ?
+      this.setState({moving: false})
+      :
+      this.setState({
+        snake: [
+          newHead,
+          ...snake.slice(0, snake.length - 1), // move body 
+        ],
+        moving: true,
+      })
   }
 
   up = (state, unit) => {
-    this.setState({
-      y: state.y - unit,
-    })
+    const { snake } = state;
+    const newHead = { x: snake[0].x, y: snake[0].y - unit } // move head
+    this.collideSelf(snake, newHead) || this.collideWall(snake, newHead, {x: 480, y: 480}) ?
+      this.setState({moving: false})
+      :
+      this.setState({
+        snake: [
+          newHead,
+          ...snake.slice(0, snake.length - 1), // move body 
+        ],
+        moving: true,
+      })
   }
-
 
   componentWillUnmount() {
     clearInterval(this.interval);
+    window.addEventListener("keydown", this.handleKeyDown, false);
   }
 
+
   render() {
-    console.log(this.state);
-    let style = {
-      width: "1em",
-      height: "1em",
-      position: "absolute",
-      left: this.state.x,
-      top: this.state.y,
-      backgroundColor: "orange",
-    }
+    console.log(this.state.snake);
     let backgroundStyle = {
-      width: "336px",
-      height: "336px",
+      width: "480px",
+      height: "480px",
       position: "absolute",
       backgroundColor: "black",
       left: 40,
@@ -136,11 +197,27 @@ class Snake extends Component {
 
     return (
       <div style={backgroundStyle}>
-        <div style={style}>
-        </div>
+        {this.state.snake.map(loc => 
+          <Snake key={`${loc.x},${loc.y}`} x={loc.x} y={loc.y} />
+        )}
       </div>
     )
   }
+}
+
+const Snake = (props) => {
+  const { x, y } = props;
+  let snakeStyle = {
+    width: "1em",
+    height: "1em",
+    position: "absolute",
+    left: x,
+    top: y,
+    backgroundColor: "#07ef1a",
+  }
+  return(<div style={snakeStyle} />);
+
+
 }
 
 
@@ -148,7 +225,7 @@ class App extends Component {
   render() {
     return (
       <div >
-        <Snake />
+        <Screen />
       </div>
     );
   }
