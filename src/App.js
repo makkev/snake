@@ -9,17 +9,19 @@ class Screen extends Component {
       x: 0,
       y: 0,
       snake: [
-        {x: 48 ,y: 0},
-        {x: 32 ,y: 0},
-        {x: 16 ,y: 0},
-        {x: 0 ,y: 0},
+        { x: 48 ,y: 0 },
+        { x: 32 ,y: 0 },
+        { x: 16 ,y: 0 },
+        { x: 0 ,y: 0 },
       ],
+      food: this.randomFoodPos(1, 30, 16),
       vx: 10,
       vy: -10,
       direction: 'RIGHT',
       moving: true,
     }
     this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.randomFoodPos = this.randomFoodPos.bind(this);
  }
 
 
@@ -53,6 +55,13 @@ class Screen extends Component {
     }
   }
 
+  randomFoodPos = (min, max, multiple) => {
+    return {
+      x: (Math.floor(Math.random() * (max - min + 1)) + min) * 16,
+      y: (Math.floor(Math.random() * (max - min + 1)) + min) * 16,
+    }
+  }
+
 
   collideWall = (snake, newHead, wallPos) => {
     return (
@@ -72,6 +81,15 @@ class Screen extends Component {
       }
     });
     return collision;
+  }
+
+  eatFood = (food, newHead) => {
+    // console.log('food: ', food);
+    // console.log('new head:', newHead);
+    return (
+      newHead.x === food.x &&
+      newHead.y === food.y
+    );
   }
 
   move = (state, unit) => {
@@ -129,6 +147,15 @@ class Screen extends Component {
         ],
         moving: true,
       })
+    if (this.eatFood(state.food, newHead)) {
+      this.setState({
+        food: this.randomFoodPos(1, 30, 16),
+      })
+      // food disapears
+      // new food
+      // body grow 
+
+    }
   }
 
   left = (state, unit) => {
@@ -144,6 +171,16 @@ class Screen extends Component {
         ],
         moving: true,
       })
+
+    if (this.eatFood(state.food, newHead)) {
+      this.setState({
+        food: this.randomFoodPos(1, 30, 16),
+      })
+      // food disapears
+      // new food
+      // body grow 
+
+    }
   }
 
   down = (state, unit) => {
@@ -159,6 +196,15 @@ class Screen extends Component {
         ],
         moving: true,
       })
+    if (this.eatFood(state.food, newHead)) {
+      this.setState({
+        food: this.randomFoodPos(1, 30, 16),
+      })
+      // food disapears
+      // new food
+      // body grow 
+
+    }
   }
 
   up = (state, unit) => {
@@ -174,6 +220,15 @@ class Screen extends Component {
         ],
         moving: true,
       })
+    if (this.eatFood(state.food, newHead)) {
+      this.setState({
+        food: this.randomFoodPos(1, 30, 16),
+      })
+      // food disapears
+      // new food
+      // body grow 
+
+    }
   }
 
   componentWillUnmount() {
@@ -183,7 +238,7 @@ class Screen extends Component {
 
 
   render() {
-    console.log(this.state.snake);
+    // console.log(this.state.snake);
     let backgroundStyle = {
       width: "480px",
       height: "480px",
@@ -200,6 +255,7 @@ class Screen extends Component {
         {this.state.snake.map(loc => 
           <Snake key={`${loc.x},${loc.y}`} x={loc.x} y={loc.y} />
         )}
+        <Food x={this.state.food.x} y={this.state.food.y} />
       </div>
     )
   }
@@ -216,8 +272,19 @@ const Snake = (props) => {
     backgroundColor: "#07ef1a",
   }
   return(<div style={snakeStyle} />);
+}
 
-
+const Food = (props) => {
+  const { x, y } = props;
+  let foodStyle = {
+    width: "1em",
+    height: "1em",
+    position: "absolute",
+    left: x,
+    top: y,
+    backgroundColor: "#e25214",
+  }
+  return(<div style={foodStyle} />);
 }
 
 
