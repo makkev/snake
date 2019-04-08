@@ -27,7 +27,7 @@ class Screen extends Component {
 
 
   componentDidMount() {
-    const tick = 500;
+    const tick = 400;
     this.interval = setInterval(() => this.tick(this.state), tick);
     window.addEventListener("keydown", this.handleKeyDown, true);
   }
@@ -137,97 +137,105 @@ class Screen extends Component {
   right = (state, unit) => {
     const { snake } = state;
     const newHead = { x: snake[0].x + unit , y: snake[0].y } // move head
-    this.collideSelf(snake, newHead) || this.collideWall(snake, newHead, {x: 480, y: 480}) ?
-      this.setState({moving: false})
-      :
-      this.setState({
-        snake: [
-          newHead,
-          ...snake.slice(0, snake.length - 1), // move body 
-        ],
-        moving: true,
-      })
     if (this.eatFood(state.food, newHead)) {
       this.setState({
         food: this.randomFoodPos(1, 30, 16),
+        snake: [
+          newHead,
+          ...snake,
+        ],
+        moving: true,
       })
-      // food disapears
-      // new food
-      // body grow 
-
+    } else {
+      this.collideSelf(snake, newHead) || this.collideWall(snake, newHead, {x: 480, y: 480}) ?
+        this.setState({moving: false})
+        :
+        this.setState({
+          snake: [
+            newHead,
+            ...snake.slice(0, snake.length - 1), // move body 
+          ],
+          moving: true,
+        })
     }
+
   }
 
   left = (state, unit) => {
     const { snake } = state;
     const newHead = { x: snake[0].x - unit , y: snake[0].y } // move head
-    this.collideSelf(snake, newHead) || this.collideWall(snake, newHead, {x: 480, y: 480}) ?
-      this.setState({moving: false})
-      :
-      this.setState({
-        snake: [
-          newHead,
-          ...snake.slice(0, snake.length - 1), // move body 
-        ],
-        moving: true,
-      })
-
     if (this.eatFood(state.food, newHead)) {
       this.setState({
         food: this.randomFoodPos(1, 30, 16),
+        snake: [
+          newHead,
+          ...snake,
+        ],
+        moving: true,
       })
-      // food disapears
-      // new food
-      // body grow 
-
-    }
+    } else {
+      this.collideSelf(snake, newHead) || this.collideWall(snake, newHead, {x: 480, y: 480}) ?
+        this.setState({moving: false})
+        :
+        this.setState({
+          snake: [
+            newHead,
+            ...snake.slice(0, snake.length - 1), // move body 
+          ],
+          moving: true,
+        })
+      }
   }
 
   down = (state, unit) => {
     const { snake } = state;
     const newHead = { x: snake[0].x, y: snake[0].y + unit } // move head
-    this.collideSelf(snake, newHead) || this.collideWall(snake, newHead, {x: 480, y: 480}) ?
-      this.setState({moving: false})
-      :
-      this.setState({
-        snake: [
-          newHead,
-          ...snake.slice(0, snake.length - 1), // move body 
-        ],
-        moving: true,
-      })
     if (this.eatFood(state.food, newHead)) {
       this.setState({
         food: this.randomFoodPos(1, 30, 16),
+        snake: [
+          newHead,
+          ...snake,
+        ],
+        moving: true,
       })
-      // food disapears
-      // new food
-      // body grow 
-
+    } else {
+      this.collideSelf(snake, newHead) || this.collideWall(snake, newHead, {x: 480, y: 480}) ?
+        this.setState({moving: false})
+        :
+        this.setState({
+          snake: [
+            newHead,
+            ...snake.slice(0, snake.length - 1), // move body 
+          ],
+          moving: true,
+        })
     }
   }
 
   up = (state, unit) => {
     const { snake } = state;
     const newHead = { x: snake[0].x, y: snake[0].y - unit } // move head
-    this.collideSelf(snake, newHead) || this.collideWall(snake, newHead, {x: 480, y: 480}) ?
-      this.setState({moving: false})
-      :
-      this.setState({
-        snake: [
-          newHead,
-          ...snake.slice(0, snake.length - 1), // move body 
-        ],
-        moving: true,
-      })
     if (this.eatFood(state.food, newHead)) {
       this.setState({
         food: this.randomFoodPos(1, 30, 16),
+        snake: [
+          newHead,
+          ...snake,
+        ],
+        moving: true,
       })
-      // food disapears
-      // new food
-      // body grow 
-
+    } else {
+      this.collideSelf(snake, newHead) || this.collideWall(snake, newHead, {x: 480, y: 480}) ?
+        this.setState({moving: false})
+        :
+        this.setState({
+          snake: [
+            newHead,
+            ...snake.slice(0, snake.length - 1), // move body 
+          ],
+          moving: true,
+        })
     }
   }
 
