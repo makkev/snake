@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 // import './App.css';
 
+const KEYCODEDIR = {
+  72: 'LEFT',
+  74: 'DOWN',
+  75: 'UP',
+  76: 'RIGHT',
+};
+
 
 class Screen extends Component {
   constructor(props) {
@@ -33,26 +40,10 @@ class Screen extends Component {
   }
   
 
+
   handleKeyDown = (e) => {
-    switch(e.keyCode) {
-      case 37:
-        this.setState({ direction: 'LEFT'})
-        break;
-      case 38:
-        this.setState({ direction: 'UP'})
-        break;
-      case 39:
-        this.setState({ direction: 'RIGHT'})
-        break;
-      case 40:
-        this.setState({ direction: 'DOWN'})
-        break;
-      case 80:
-        this.setState({ moving: !this.state.moving})
-        break;
-      default:
-        break;
-    }
+    const { keyCode } = e;
+    this.setState({ direction: KEYCODEDIR[keyCode]});
   }
 
   randomFoodPos = (min, max, multiple) => {
@@ -94,43 +85,17 @@ class Screen extends Component {
 
   move = (state, unit) => {
     const { direction } = state;
-    switch(direction) {
-      case 'DOWN':
-        this.down(state, unit);
-        break;
-      case 'LEFT':
-        this.left(state, unit);
-        break;
-      case 'UP':
-        this.up(state, unit);
-        break;
-      case 'RIGHT':
-        this.right(state, unit);
-        break;
-      default:
-        break
+    const movement = {
+      DOWN:   (state, unit) => this.down(state, unit),
+      LEFT:   (state, unit) => this.left(state, unit),
+      UP:     (state, unit) => this.up(state, unit),
+      RIGHT:  (state, unit) => this.right(state, unit),
     }
-
+    movement[direction](state, unit);
   }
 
   tick = (state) => {
     const unit = 16;
-    // if (this.state.y === 0 && this.state.x >= 320) {
-    //   this.setState({ direction: 'DOWN' });
-    //   this.down(state, unit);
-    // } 
-    // if (this.state.x === 320 && this.state.y >= 320) {
-    //   this.setState({ direction: 'LEFT' });
-    //   this.left(state, unit);
-    // }
-    // if (this.state.x === 0 && this.state.y >= 320) {
-    //   this.setState({ direction: 'UP' });
-    //   this.up(state, unit);
-    // } 
-    // if (this.state.x === 0 && this.state.y === 0) {
-    //   this.setState({ direction: 'RIGHT' });
-    //   this.right(state, unit);
-    // }
     state.moving && this.move(state, unit);
   }
 
@@ -158,7 +123,6 @@ class Screen extends Component {
           moving: true,
         })
     }
-
   }
 
   left = (state, unit) => {
