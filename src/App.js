@@ -16,12 +16,12 @@ class Screen extends Component {
       x: 0,
       y: 0,
       snake: [
-        { x: 48 ,y: 0 },
+        // { x: 48 ,y: 0 },
         { x: 32 ,y: 0 },
         { x: 16 ,y: 0 },
         { x: 0 ,y: 0 },
       ],
-      food: this.randomFoodPos(1, 30, 16),
+      food: this.randomFoodPos(0, 29, 16),
       vx: 10,
       vy: -10,
       direction: 'RIGHT',
@@ -43,7 +43,8 @@ class Screen extends Component {
 
   handleKeyDown = (e) => {
     const { keyCode } = e;
-    this.setState({ direction: KEYCODEDIR[keyCode]});
+    if (keyCode in KEYCODEDIR)
+      this.setState({ direction: KEYCODEDIR[keyCode]});
   }
 
   randomFoodPos = (min, max, multiple) => {
@@ -84,27 +85,18 @@ class Screen extends Component {
   }
 
   move = (state, unit) => {
-    const { direction } = state;
-    const movement = {
-      DOWN:   (state, unit) => this.down(state, unit),
-      LEFT:   (state, unit) => this.left(state, unit),
-      UP:     (state, unit) => this.up(state, unit),
-      RIGHT:  (state, unit) => this.right(state, unit),
+    const { snake, direction } = state;
+    const newHeadMove = {
+      DOWN: { x: snake[0].x, y: snake[0].y + unit }, // move head
+      LEFT: { x: snake[0].x - unit, y: snake[0].y }, // move head
+      RIGHT: { x: snake[0].x + unit, y: snake[0].y }, // move head
+      UP: { x: snake[0].x, y: snake[0].y - unit }, // move head
     }
-    movement[direction](state, unit);
-  }
-
-  tick = (state) => {
-    const unit = 16;
-    state.moving && this.move(state, unit);
-  }
-
-  right = (state, unit) => {
-    const { snake } = state;
-    const newHead = { x: snake[0].x + unit , y: snake[0].y } // move head
+    const newHead = newHeadMove[state.direction];
     if (this.eatFood(state.food, newHead)) {
+      // snake eats food - new food position, snake grows one unit
       this.setState({
-        food: this.randomFoodPos(1, 30, 16),
+        food: this.randomFoodPos(0, 29, 16),
         snake: [
           newHead,
           ...snake,
@@ -112,35 +104,10 @@ class Screen extends Component {
         moving: true,
       })
     } else {
-      this.collideSelf(snake, newHead) || this.collideWall(snake, newHead, {x: 480, y: 480}) ?
+      if (this.collideSelf(snake, newHead) || this.collideWall(snake, newHead, {x: 480, y: 480})) {
+        // game over - collision
         this.setState({moving: false})
-        :
-        this.setState({
-          snake: [
-            newHead,
-            ...snake.slice(0, snake.length - 1), // move body 
-          ],
-          moving: true,
-        })
-    }
-  }
-
-  left = (state, unit) => {
-    const { snake } = state;
-    const newHead = { x: snake[0].x - unit , y: snake[0].y } // move head
-    if (this.eatFood(state.food, newHead)) {
-      this.setState({
-        food: this.randomFoodPos(1, 30, 16),
-        snake: [
-          newHead,
-          ...snake,
-        ],
-        moving: true,
-      })
-    } else {
-      this.collideSelf(snake, newHead) || this.collideWall(snake, newHead, {x: 480, y: 480}) ?
-        this.setState({moving: false})
-        :
+      } else {
         this.setState({
           snake: [
             newHead,
@@ -149,59 +116,14 @@ class Screen extends Component {
           moving: true,
         })
       }
-  }
-
-  down = (state, unit) => {
-    const { snake } = state;
-    const newHead = { x: snake[0].x, y: snake[0].y + unit } // move head
-    if (this.eatFood(state.food, newHead)) {
-      this.setState({
-        food: this.randomFoodPos(1, 30, 16),
-        snake: [
-          newHead,
-          ...snake,
-        ],
-        moving: true,
-      })
-    } else {
-      this.collideSelf(snake, newHead) || this.collideWall(snake, newHead, {x: 480, y: 480}) ?
-        this.setState({moving: false})
-        :
-        this.setState({
-          snake: [
-            newHead,
-            ...snake.slice(0, snake.length - 1), // move body 
-          ],
-          moving: true,
-        })
     }
   }
 
-  up = (state, unit) => {
-    const { snake } = state;
-    const newHead = { x: snake[0].x, y: snake[0].y - unit } // move head
-    if (this.eatFood(state.food, newHead)) {
-      this.setState({
-        food: this.randomFoodPos(1, 30, 16),
-        snake: [
-          newHead,
-          ...snake,
-        ],
-        moving: true,
-      })
-    } else {
-      this.collideSelf(snake, newHead) || this.collideWall(snake, newHead, {x: 480, y: 480}) ?
-        this.setState({moving: false})
-        :
-        this.setState({
-          snake: [
-            newHead,
-            ...snake.slice(0, snake.length - 1), // move body 
-          ],
-          moving: true,
-        })
-    }
+  tick = (state) => {
+    const unit = 16;
+    state.moving && this.move(state, unit);
   }
+
 
   componentWillUnmount() {
     clearInterval(this.interval);
