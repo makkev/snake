@@ -28,5 +28,14 @@
   /* height: 50px;  */
   /* background-color: red; */
   /* width: 100px; */
+}
+
+.gameOver {
+  font-family: 'ARCADE';
+  font-size: 30px;
+  color: #f409cd;
+  padding-left: 40px;
 
 }
+
+

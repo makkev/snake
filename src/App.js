@@ -27,6 +27,7 @@ class Screen extends Component {
       direction: 'RIGHT',
       moving: true,
       score: 0,
+      gameOver: false,
     }
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.randomFoodPos = this.randomFoodPos.bind(this);
@@ -108,7 +109,10 @@ class Screen extends Component {
     } else {
       if (this.collideSelf(snake, newHead) || this.collideWall(snake, newHead, {x: 480, y: 480})) {
         // game over - collision
-        this.setState({moving: false})
+        this.setState({
+          moving: false,
+          gameOver: true,
+        })
       } else {
         this.setState({
           snake: [
@@ -141,13 +145,11 @@ class Screen extends Component {
       position: "absolute",
       backgroundColor: "#d7e238",
       left: 40,
-      top: 70,
+      top: 75,
       // padding: 10,
       margin: 0,
       border: "2px solid #727269",
       // borderColor: "#d7e238",
-      
-
     }
 
     return (
@@ -163,6 +165,11 @@ class Screen extends Component {
             &#8594;l
           </div>
         </div>
+          {this.state.gameOver &&
+            <div className="gameOver">
+              Game Over
+            </div>
+          }
         <div style={backgroundStyle}>
           {this.state.snake.map(loc => 
             <Snake key={`${loc.x},${loc.y}`} x={loc.x} y={loc.y} />
