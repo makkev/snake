@@ -3,9 +3,13 @@ import './App.css';
 
 const KEYCODEDIR = {
   72: 'LEFT',
+  37: 'LEFT',
   74: 'DOWN',
+  40: 'DOWN',
   75: 'UP',
+  38: 'UP',
   76: 'RIGHT',
+  39: 'RIGHT',
 };
 
 
@@ -36,7 +40,7 @@ class Screen extends Component {
 
 
   componentDidMount() {
-    const tick = 200;
+    const tick = 300;
     this.interval = setInterval(() => this.tick(this.state), tick);
     window.addEventListener("keydown", this.handleKeyDown, true);
   }
@@ -159,10 +163,13 @@ class Screen extends Component {
             Score: {this.state.score}
           </div>
           <div className="screenHead2">
-            &#8593;k
-            &#8595;j
             &#8592;h
+            &#8595;j
+            &#8593;k
             &#8594;l
+            <div>
+              or arrow keys
+            </div>
           </div>
         </div>
           {this.state.gameOver &&

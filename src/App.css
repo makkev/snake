@@ -33,7 +33,7 @@
 .gameOver {
   font-family: 'ARCADE';
   font-size: 30px;
-  color: #f409cd;
+  color: red;
   padding-left: 40px;
 
 }
