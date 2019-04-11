@@ -1,3 +1,9 @@
+# snake 
+Snake game in React. (https://makkev-snake.herokuapp.com)
+
+React is awesome in re-rendering view when state changes. It's amazingly fast. 
+Great for building games where there are usually many changes in state at any point of time.   
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
@@ -66,4 +72,3 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
-# snake 
