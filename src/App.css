@@ -7,10 +7,26 @@
 
 }
 .screenHead {
+ display: flex;
+ flex-direction: row;
+ justify-content: space-start;
+}
+.screenHead1 {
   font-family: 'ARCADE';
   font-size: 40px;
   color: #274925;
   padding-left: 40px;
-  height: 100px; 
+  width: 250px;
+  /* height: 50px;  */
+  /* background-color: blue; */
+
+}
+.screenHead2 {
+  font-family: 'ARCADE';
+  font-size: 30px;
+  color: #274925;
+  /* height: 50px;  */
+  /* background-color: red; */
+  /* width: 100px; */
 
 }

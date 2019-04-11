@@ -141,7 +141,7 @@ class Screen extends Component {
       position: "absolute",
       backgroundColor: "#d7e238",
       left: 40,
-      top: 50,
+      top: 70,
       // padding: 10,
       margin: 0,
       border: "2px solid #727269",
@@ -153,7 +153,15 @@ class Screen extends Component {
     return (
       <div>
         <div className="screenHead">
-          Score: {this.state.score}
+          <div className="screenHead1">
+            Score: {this.state.score}
+          </div>
+          <div className="screenHead2">
+            &#8593;k
+            &#8595;j
+            &#8592;h
+            &#8594;l
+          </div>
         </div>
         <div style={backgroundStyle}>
           {this.state.snake.map(loc => 
