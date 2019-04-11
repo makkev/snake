@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import './App.css';
+import './App.css';
 
 const KEYCODEDIR = {
   72: 'LEFT',
@@ -26,6 +26,7 @@ class Screen extends Component {
       vy: -10,
       direction: 'RIGHT',
       moving: true,
+      score: 0,
     }
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.randomFoodPos = this.randomFoodPos.bind(this);
@@ -34,7 +35,7 @@ class Screen extends Component {
 
 
   componentDidMount() {
-    const tick = 400;
+    const tick = 200;
     this.interval = setInterval(() => this.tick(this.state), tick);
     window.addEventListener("keydown", this.handleKeyDown, true);
   }
@@ -85,7 +86,7 @@ class Screen extends Component {
   }
 
   move = (state, unit) => {
-    const { snake, direction } = state;
+    const { snake, direction, score } = state;
     const newHeadMove = {
       DOWN: { x: snake[0].x, y: snake[0].y + unit }, // move head
       LEFT: { x: snake[0].x - unit, y: snake[0].y }, // move head
@@ -102,6 +103,7 @@ class Screen extends Component {
           ...snake,
         ],
         moving: true,
+        score: score + 1,
       })
     } else {
       if (this.collideSelf(snake, newHead) || this.collideWall(snake, newHead, {x: 480, y: 480})) {
@@ -137,19 +139,28 @@ class Screen extends Component {
       width: "480px",
       height: "480px",
       position: "absolute",
-      backgroundColor: "black",
+      backgroundColor: "#d7e238",
       left: 40,
-      top: 40,
-      // padding: 0,
+      top: 50,
+      // padding: 10,
       margin: 0,
+      border: "2px solid #727269",
+      // borderColor: "#d7e238",
+      
+
     }
 
     return (
-      <div style={backgroundStyle}>
-        {this.state.snake.map(loc => 
-          <Snake key={`${loc.x},${loc.y}`} x={loc.x} y={loc.y} />
-        )}
-        <Food x={this.state.food.x} y={this.state.food.y} />
+      <div>
+        <div className="screenHead">
+          Score: {this.state.score}
+        </div>
+        <div style={backgroundStyle}>
+          {this.state.snake.map(loc => 
+            <Snake key={`${loc.x},${loc.y}`} x={loc.x} y={loc.y} />
+          )}
+          <Food x={this.state.food.x} y={this.state.food.y} />
+        </div>
       </div>
     )
   }
@@ -163,7 +174,8 @@ const Snake = (props) => {
     position: "absolute",
     left: x,
     top: y,
-    backgroundColor: "#07ef1a",
+    // backgroundColor: "#07ef1a",
+    backgroundColor: "#727269",
   }
   return(<div style={snakeStyle} />);
 }
@@ -176,7 +188,8 @@ const Food = (props) => {
     position: "absolute",
     left: x,
     top: y,
-    backgroundColor: "#e25214",
+    // backgroundColor: "#e25214",
+    backgroundColor: "#f79009",
   }
   return(<div style={foodStyle} />);
 }
@@ -185,7 +198,7 @@ const Food = (props) => {
 class App extends Component {
   render() {
     return (
-      <div >
+      <div className="appContainer">
         <Screen />
       </div>
     );

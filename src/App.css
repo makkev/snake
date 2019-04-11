@@ -1,26 +1,16 @@
-.grid {
+.appContainer {
+  padding: 10px;
+}
+@font-face {
+  font-family: 'ARCADE';
+  src: url('fonts/ARCADE.TTF') format('truetype');
 
 }
+.screenHead {
+  font-family: 'ARCADE';
+  font-size: 40px;
+  color: #274925;
+  padding-left: 40px;
+  height: 100px; 
 
-.grid-row {
-  display: flex;
-  flex-direction: row;
-}
-
-.grid-cell {
-  display: flex;
-  flex-direction: column;
-
-  border-top: 1px solid #000000;
-  border-left: 1px solid #000000;
-  width: 10px;
-  height: 10px;
-}
-
-.grid-cell-snake {
-  background-color: #000000;
-}
-
-.grid-cell-snack {
-  background-color: #008000;
 }
