@@ -149,7 +149,7 @@ class Screen extends Component {
       position: "absolute",
       backgroundColor: "#d7e238",
       left: 40,
-      top: 75,
+      top: 80,
       // padding: 10,
       margin: 0,
       border: "2px solid #727269",
